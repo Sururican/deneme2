@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: lstm-container
-        image: your-docker-username/lstm-repo:latest
+        image: sururikus/deneme2:main
         ports:
         - containerPort: 5000
 
@@ -38,6 +38,37 @@ spec:
     spec:
       containers:
       - name: transformer-container
-        image: your-docker-username/transformer-repo:latest
+        image: sururikus/deneme2:latest
         ports:
         - containerPort: 5001
+
+# service-lstm.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: lstm-predictor-service
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    app: lstm-predictor
+  ports:
+  - port: 80
+    targetPort: 5000
+    nodePort: 30001
+
+# service-transformer.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: transformer-predictor-service
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    app: transformer-predictor
+  ports:
+  - port: 80
+    targetPort: 5001
+    nodePort: 30002
+
