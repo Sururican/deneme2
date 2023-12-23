@@ -15,14 +15,14 @@ spec:
     spec:
       containers:
        - name: lstm-container
-         image: your-docker-username/lstm-repo:latest
+         image: sururikus/deneme2:main
          imagePullPolicy: Always
          env:
           - name: POSTGRES_PASSWORD
             value: mysecretpassword
 
        - name: transformer-container
-         image: your-docker-username/transformer-repo:latest
+         image: sururikus/deneme2:latest
          imagePullPolicy: Always
          env:
           - name: POSTGRES_PASSWORD
