@@ -80,7 +80,7 @@ jobs:
       
   RUN_LSTM_Modell_to_Docker:
     runs-on: ubuntu-latest
-    needs: build_LSTM_Modell
+    needs: build_Deploy_LSTM_Modell
 
     steps:
     - name: Run Docker Container für LSTM
@@ -88,7 +88,7 @@ jobs:
       
   RUN_Transformer_Modell_to_Docker:
     runs-on: ubuntu-latest
-    needs: build_Transformer_Modell
+    needs: build_Deploy_Transformer_Modell
 
     steps:
     - name: Run Docker Container für LSTM
