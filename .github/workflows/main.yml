@@ -41,7 +41,7 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:main
     - name: Deploy to Kubernetes
-      run: kubectl apply -f kubernetes.yaml
+      run: kubectl apply -f main/kubernetes.yaml
 
         
   build_Deploy_Transformer_Modell:
@@ -78,7 +78,7 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
     - name: Deploy to Kubernetes
-      run: kubectl apply -f kubernetes.yaml
+      run: kubectl apply -f main/kubernetes.yaml
        
 
       
