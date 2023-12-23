@@ -1,0 +1,43 @@
+# deployment-lstm.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lstm-predictor
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lstm-predictor
+  template:
+    metadata:
+      labels:
+        app: lstm-predictor
+    spec:
+      containers:
+      - name: lstm-container
+        image: your-docker-username/lstm-repo:latest
+        ports:
+        - containerPort: 5000
+
+# deployment-transformer.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transformer-predictor
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transformer-predictor
+  template:
+    metadata:
+      labels:
+        app: transformer-predictor
+    spec:
+      containers:
+      - name: transformer-container
+        image: your-docker-username/transformer-repo:latest
+        ports:
+        - containerPort: 5001
