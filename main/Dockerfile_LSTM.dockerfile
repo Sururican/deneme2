@@ -19,4 +19,4 @@ EXPOSE 80
 ENV NAME World
 
 # Run lstm.py when the container launches
-CMD ["python", "predict_next_trend.py"]
+CMD ["python", "LSTM_Prediction.py"]
