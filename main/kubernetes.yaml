@@ -1,74 +1,44 @@
-# deployment-lstm.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: lstm-predictor
+  name: lstm-transformer-deployment
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: lstm-predictor
+      app: lstm-transformer
   template:
     metadata:
       labels:
-        app: lstm-predictor
+        app: lstm-transformer
     spec:
       containers:
-      - name: lstm-container
-        image: sururikus/deneme2:main
-        ports:
-        - containerPort: 5000
+       - name: lstm-container
+         image: your-docker-username/lstm-repo:latest
+         imagePullPolicy: Always
+         env:
+          - name: POSTGRES_PASSWORD
+            value: mysecretpassword
 
-# deployment-transformer.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: transformer-predictor
-  namespace: default
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: transformer-predictor
-  template:
-    metadata:
-      labels:
-        app: transformer-predictor
-    spec:
-      containers:
-      - name: transformer-container
-        image: sururikus/deneme2:latest
-        ports:
-        - containerPort: 5001
+       - name: transformer-container
+         image: your-docker-username/transformer-repo:latest
+         imagePullPolicy: Always
+         env:
+          - name: POSTGRES_PASSWORD
+            value: mysecretpassword
 
-# service-lstm.yaml
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: lstm-predictor-service
+  name: lstm-transformer-service
   namespace: default
 spec:
   type: NodePort
   selector:
-    app: lstm-predictor
+    app: lstm-transformer
   ports:
-  - port: 80
+  - port: 5000
     targetPort: 5000
     nodePort: 30001
-
-# service-transformer.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: transformer-predictor-service
-  namespace: default
-spec:
-  type: NodePort
-  selector:
-    app: transformer-predictor
-  ports:
-  - port: 80
-    targetPort: 5001
-    nodePort: 30002
-
