@@ -40,6 +40,8 @@ jobs:
         file: main/Dockerfile_LSTM.dockerfile
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:main
+    - name: Deploy to Kubernetes
+      run: kubectl apply -f kubernetes.yaml
 
         
   build_Deploy_Transformer_Modell:
@@ -75,6 +77,8 @@ jobs:
         file: main/Transformer_Dockerfile.dockerfile
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
+    - name: Deploy to Kubernetes
+      run: kubectl apply -f kubernetes.yaml
        
 
       
