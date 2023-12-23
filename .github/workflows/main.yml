@@ -91,7 +91,7 @@ jobs:
     needs: build_Deploy_Transformer_Modell
 
     steps:
-    - name: Run Docker Container für LSTM
+    - name: Run Docker Container für TRANSFORMER
       run: docker run sururikus/deneme2:latest
   
       
