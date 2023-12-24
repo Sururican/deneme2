@@ -20,7 +20,6 @@ def make_predictions(input_data):
     # ...
 
     # Print or return predictions
-    print(predictions)
     # or return predictions
     return predictions
 
@@ -116,7 +115,8 @@ input=np.array([[[0.51264709, 0.51828808, 0.51595971, 0.51568477, 0.51568477,
         0.69367602, 0.55166656, 0.51971161, 0.52742034, 0.        ,
         1.        , 1.        , 1.        , 1.        , 1.        ]]])
 
-make_predictions(input)
+predictions=make_predictions(input)
+print(predictions)
 
 
 # %%
