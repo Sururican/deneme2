@@ -79,6 +79,9 @@ jobs:
        
   Build_and_Run_container_with_DockerCompose:
     runs-on: ubuntu-latest
+    needs:
+      - build_Deploy_Transformer_Modell
+      - build_Deploy_LSTM_Modell
 
     steps:
     - name: Docker Compose Çalıştır
