@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . /app
 RUN pip install --no-cache-dir -r requirements
 # Port 5000 der HTTP Server  außerhalb dieses Container zur verfügung machen 
-EXPOSE 9091
+EXPOSE 80
 
 ENV NAME World 
 
