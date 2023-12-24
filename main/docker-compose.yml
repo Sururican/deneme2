@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  lstmmodel:
+    container_name: LSTM_Prediction
+    image: sururikus/deneme2:main
+    ports:
+      - 9090:80
+      - 9091:80
+  transfomermodel:
+    container_name: Transformer_Prediction
+    image: sururikus/deneme2:latest
+    ports:
+      - 9092:80
+      - 9093:80
