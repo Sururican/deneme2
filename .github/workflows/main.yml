@@ -85,7 +85,7 @@ jobs:
 
     steps:
     - name: Run Docker Container für LSTM
-      run: docker run -p 9090:80 sururikus/deneme2:main
+      run: docker run -p 9092:80 sururikus/deneme2:main
       
   RUN_Transformer_Modell_to_Docker:
     runs-on: ubuntu-latest
