@@ -88,11 +88,13 @@ jobs:
       run: |
         docker run -p 9092:80 sururikus/deneme2:main > docker_logs_lstm.txt
       continue-on-error: true
+    - name: Show working directory
+      run: pwd
     - name: Upload Docker Logs to Artifact
       uses: actions/upload-artifact@v3
       with:
         name: CI/CD Pipeline
-        path: main/docker_logs_lstm.txt
+        path: docker_logs_lstm.txt
       
       
   RUN_Transformer_Modell_to_Docker:
@@ -109,7 +111,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: CI/CD Pipeline
-        path: main/docker_logs_transformer.txt
+        path: docker_logs_transformer.txt
   
       
         
