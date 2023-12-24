@@ -93,7 +93,7 @@ jobs:
     - name: Upload Docker Logs to Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: CI/CD Pipeline
+        name: Pipeline
         path: docker_logs_lstm.txt
       
       
@@ -110,7 +110,7 @@ jobs:
     - name: Upload Docker Logs to Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: CI/CD Pipeline
+        name: Pipeline
         path: docker_logs_transformer.txt
   
       
