@@ -1,43 +1,16 @@
-# %%
-# your_inference_script.py
-
+from http.server import BaseHTTPRequestHandler, HTTPServer
 import tensorflow as tf
 import numpy as np
 from keras.models import load_model
 
-def make_predictions(input_data):
-    # Load the saved model
-    model_folder='LSTM_Model'
-    loaded_model = tf.keras.models.load_model(model_folder)
+class PredictionHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
+        self.end_headers()
 
-    # Preprocess input_data as needed
-    # ...
-
-    # Make predictions using the loaded model
-    predictions = loaded_model.predict(input_data)
-
-    # Post-process predictions as needed
-    # ...
-
-    # Print or return predictions
-    print(predictions)
-    # or return predictions
-    return predictions
-def save_predictions_to_html(predictions, html_file_path='predictions.html'):
-    # Open the HTML file in write mode
-    with open(html_file_path, 'w') as html_file:
-        # Write HTML header
-        html_file.write('<html><head><title>Predictions</title></head><body>')
-        
-        # Write predictions as HTML content
-        html_file.write('<h2>Predictions:</h2>')
-        html_file.write('<pre>{}</pre>'.format(predictions))
-        
-        # Write HTML footer
-        html_file.write('</body></html>')
-
-# %%
-input=np.array([[[0.51264709, 0.51828808, 0.51595971, 0.51568477, 0.51568477,
+        # Make predictions
+        input=np.array([[[0.51264709, 0.51828808, 0.51595971, 0.51568477, 0.51568477,
         0.60456604, 0.50495466, 0.486508  , 0.50329031, 0.        ,
         1.        , 1.        , 0.        , 1.        , 0.        ],
        [0.51517133, 0.5111801 , 0.48971778, 0.49174206, 0.49174206,
@@ -126,7 +99,45 @@ input=np.array([[[0.51264709, 0.51828808, 0.51595971, 0.51568477, 0.51568477,
         1.        , 1.        , 1.        , 1.        , 1.        ],
        [0.56625103, 0.5654558 , 0.5670309 , 0.569612  , 0.569612  ,
         0.69367602, 0.55166656, 0.51971161, 0.52742034, 0.        ,
-        1.        , 1.        , 1.        , 1.        , 1.        ]]])
+        1.        , 1.        , 1.        , 1.        , 1.        ]]])  # Your input data
+        predictions = make_predictions(input)
+
+        # Write HTML response
+        response = "<html><head><title>Predictions</title></head><body>"
+        response += "<h2>Predictions:</h2>"
+        response += "<pre>{}</pre>".format(predictions)
+        response += "</body></html>"
+
+        self.wfile.write(response.encode('utf-8'))
+
+def make_predictions(input_data):
+    # Load the saved model
+    model_folder = 'LSTM_Model'
+    loaded_model = tf.keras.models.load_model(model_folder)
+
+    # Preprocess input_data as needed
+    # ...
+
+    # Make predictions using the loaded model
+    predictions = loaded_model.predict(input_data)
+
+    # Post-process predictions as needed
+    # ...
+
+    # Return predictions
+    return predictions
+
+def run_server(port=9092):
+    server_address = ('', port)
+    httpd = HTTPServer(server_address, PredictionHandler)
+    print(f"Server is running on http://localhost:{port}/")
+    httpd.serve_forever()
+
+if __name__ == "__main__":
+    run_server()
+
+# %%
+
 
 predictions=make_predictions(input)
 save_predictions_to_html(predictions)
