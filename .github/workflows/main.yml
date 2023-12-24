@@ -93,7 +93,7 @@ jobs:
 
     steps:
     - name: Run Docker Container für TRANSFORMER
-      run: docker run -p 9091:80 sururikus/deneme2:latest -p
+      run: docker run -p 9091:80 sururikus/deneme2:latest
   
       
         
