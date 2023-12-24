@@ -23,6 +23,18 @@ def make_predictions(input_data):
     print(predictions)
     # or return predictions
     return predictions
+def save_predictions_to_html(predictions, html_file_path='predictions.html'):
+    # Open the HTML file in write mode
+    with open(html_file_path, 'w') as html_file:
+        # Write HTML header
+        html_file.write('<html><head><title>Predictions</title></head><body>')
+        
+        # Write predictions as HTML content
+        html_file.write('<h2>Predictions:</h2>')
+        html_file.write('<pre>{}</pre>'.format(predictions))
+        
+        # Write HTML footer
+        html_file.write('</body></html>')
 
 # %%
 input=np.array([[[0.51264709, 0.51828808, 0.51595971, 0.51568477, 0.51568477,
@@ -117,7 +129,7 @@ input=np.array([[[0.51264709, 0.51828808, 0.51595971, 0.51568477, 0.51568477,
         1.        , 1.        , 1.        , 1.        , 1.        ]]])
 
 predictions=make_predictions(input)
-print(predictions)
+save_predictions_to_html(predictions)
 
 # %%
 
