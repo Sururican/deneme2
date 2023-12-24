@@ -85,8 +85,9 @@ jobs:
 
     steps:
     - name: Docker Compose Çalıştır
-      run: docker-compose -f docker-compose.yml up -d > docker_logs.txt
-      working-directory: main/docker-compose.yml
+      uses: isbang/compose-action@v1.5.1
+      with:
+        compose-file: main/docker-compose.yml
     - name: Show working directory
       run: pwd
     - name: Upload Docker Logs to Artifact
