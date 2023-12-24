@@ -40,12 +40,7 @@ jobs:
         file: main/Dockerfile_LSTM.dockerfile
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:main
-    - name: Set up kubectl
-      uses: azure/setup-kubectl@v1
-      with:
-        kubeconfig: ${{ secrets.KUBECONFIG_FILE }}
-    - name: Deploy to Kubernetes
-      run: kubectl apply -f main/kubernetes.yaml
+  
 
         
   build_Deploy_Transformer_Modell:
@@ -81,12 +76,6 @@ jobs:
         file: main/Transformer_Dockerfile.dockerfile
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
-    - name: Set up kubectl
-      uses: azure/setup-kubectl@v1
-      with:
-        kubeconfig: ${{ secrets.KUBECONFIG_FILE }}
-    - name: Deploy to Kubernetes
-      run: kubectl apply -f main/kubernetes.yaml
        
 
       
