@@ -89,10 +89,10 @@ jobs:
         docker run -p 9092:80 sururikus/deneme2:main > docker_logs_lstm.tx
       continue-on-error: true
     - name: Upload Docker Logs to Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: CI/CD Pipeline
-        path: $GITHUB_WORKSPACE/docker_logs_lstm.txt
+        path: docker_logs_lstm.txt
       
       
   RUN_Transformer_Modell_to_Docker:
@@ -106,10 +106,10 @@ jobs:
       # Add docker_logs.txt to artifacts
       continue-on-error: true
     - name: Upload Docker Logs to Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: CI/CD Pipeline
-        path: $GITHUB_WORKSPACE/docker_logs_transformer.txt
+        path: docker_logs_transformer.txt
   
       
         
