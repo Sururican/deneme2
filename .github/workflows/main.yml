@@ -77,22 +77,41 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
        
-  Build_and_Run_container_with_DockerCompose:
+
+      
+  RUN_LSTM_Modell_to_Docker:
     runs-on: ubuntu-latest
-    needs:
-      - build_Deploy_Transformer_Modell
-      - build_Deploy_LSTM_Modell
+    needs: build_Deploy_LSTM_Modell
 
     steps:
-    - name: Docker Compose Çalıştır
-      uses: isbang/compose-action@v1.5.1
-      with:
-        compose-file: main/docker-compose.yml
+    - name: Run Docker Container für LSTM
+      run: |
+        docker run -p 9092:80 sururikus/deneme2:main > docker_logs_lstm.txt
+      continue-on-error: true
     - name: Show working directory
       run: pwd
     - name: Upload Docker Logs to Artifact
       uses: actions/upload-artifact@v3
       with:
         name: Pipeline
-        path: docker_logs.txt
+        path: docker_logs_lstm.txt
+      
+      
+  RUN_Transformer_Modell_to_Docker:
+    runs-on: ubuntu-latest
+    needs: build_Deploy_Transformer_Modell
+
+    steps:
+    - name: Run Docker Container für TRANSFORMER
+      run: |
+        docker run -p 9091:80 sururikus/deneme2:latest > docker_logs_transformer.txt
+      # Add docker_logs.txt to artifacts
+      continue-on-error: true
+    - name: Upload Docker Logs to Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Pipeline
+        path: docker_logs_transformer.txt
+  
+      
         
