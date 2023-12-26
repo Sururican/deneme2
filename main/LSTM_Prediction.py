@@ -27,7 +27,7 @@ def make_predictions(input_data):
 end_date = datetime.now().strftime("%Y-%m-%d")
 #start_date = (datetime.now() - timedelta(days=120)).strftime("%Y-%m-%d")
 data = yf.download(tickers = 'EURUSD=X', start = '2000-03-11',end = end_date)
-print(data)
+#print(data)
 financial_data_processor = DataProcessor(data)
 X_train, y_train, X_test, y_test = financial_data_processor.X_train, financial_data_processor.y_train, financial_data_processor.X_test, financial_data_processor.y_test
 X=financial_data_processor.input_data
