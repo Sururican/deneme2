@@ -1,5 +1,5 @@
 # official base image of Python 
-FROM arm64v8/python:3.10-slim
+FROM python:3.10-slim
 
 WORKDIR /app
 #kopieren wir aktuelle Directory to  /App Folder
