@@ -118,11 +118,8 @@ class BayesianTransformerOptimizer:
 
         for _ in range(hp.Int('num_trans_blocks', min_value=2, max_value=6, step=1)):
             x = self.transformer_encoder(x, hp)
-
         x = layers.GlobalAveragePooling1D(data_format="channels_first")(x)
-
         mlp_units_choice = hp.Choice('mlp_units', values=[64, 128, 256, 512, 1024])
-
         # Döngü içinde kullanmak üzere mlp_units_choice değerini alın
         for dim in [mlp_units_choice]:
             x = Dense(dim, activation="relu")(x)
@@ -146,13 +143,13 @@ class BayesianTransformerOptimizer:
             attention_axes=hp.Int('attention_axes', min_value=1, max_value=3, step=1)
         )(x, x)
         x = layers.Dropout(hp.Float('dropout', min_value=0.1, max_value=0.5, step=0.1))(x)
-        res = x
+        res =layers.Add()([x, inputs])
 
         x = layers.LayerNormalization(epsilon=hp.Float('epsilon', min_value=1e-8, max_value=1e-5, sampling='log'))(res)
         x = layers.Conv1D(filters=hp.Int('ff_dim', min_value=1, max_value=4, step=1), kernel_size=hp.Int('kernel_size', min_value=1, max_value=4, step=1), activation="relu")(x)
         x = layers.Dropout(hp.Float('dropout', min_value=0.1, max_value=0.5, step=0.1))(x)
         x = layers.Conv1D(filters=inputs.shape[-1], kernel_size=hp.Int('kernel_size', min_value=1, max_value=4, step=1))(x)
-        return x + res
+        return x
 
     def optimize(self):
         tuner = BayesianOptimization(
@@ -161,7 +158,7 @@ class BayesianTransformerOptimizer:
             max_trials=3,
             num_initial_points=self.num_initial_points,
             directory='bayesian_optimization',
-            project_name='transformerneu'
+            project_name='tranformemodel4'
         )
 
         tuner.search(self.X_train, self.y_train, epochs=self.max_epochs,
@@ -189,7 +186,7 @@ class TransformerModel:
         x = layers.LayerNormalization(epsilon=self.epsilon)(inputs)
         x = layers.MultiHeadAttention(key_dim=self.head_size, num_heads=self.num_heads, dropout=self.dropout, attention_axes=self.attention_axes)(x, x)
         x = layers.Dropout(self.dropout)(x)
-        res = x + inputs
+        res =layers.Add()([x, inputs])
 
         # Feed Forward Part
         x = layers.LayerNormalization(epsilon=self.epsilon)(res)
@@ -198,14 +195,16 @@ class TransformerModel:
         x = layers.Conv1D(filters=inputs.shape[-1], kernel_size=self.kernel_size)(x)
         return x + res
 
+        
+
     def build_transformer(self):
         n_timesteps, n_features, n_outputs = 30, 15, 1
         inputs = tf.keras.Input(shape=(n_timesteps, n_features))
         x = inputs
         for _ in range(self.num_trans_blocks):
             x = self.transformer_encoder(x)
-
         x = layers.GlobalAveragePooling1D(data_format="channels_first")(x)
+      
         for dim in self.mlp_units:
             x = layers.Dense(dim, activation="relu")(x)
             x = layers.Dropout(self.mlp_dropout)(x)
@@ -224,18 +223,6 @@ class TransformerModel:
         hist = self.model.fit(X_train, y_train, batch_size=batch_size, epochs=epochs, verbose=1, callbacks=callbacks)
         print(time.time() - start)
         return hist
-
-# Holen Sie sich Ihre Trainingsdaten und Etiketten
-'''
-data = ETL("EURUSD=X")
-X_train, y_train = data.X_train, data.y_train
-
-# TransformerModel-Klasse erstellen
-transformer_model = TransformerModel(head_size=128, num_heads=4, ff_dim=2, num_trans_blocks=4, mlp_units=[256], mlp_dropout=0.10, dropout=0.10, attention_axes=1)
-
-# Build and train the model
-transformer_model.compile_and_fit(X_train, y_train)
-'''
 
         
 
