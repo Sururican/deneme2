@@ -1,5 +1,6 @@
-# Use an official Python runtime as a parent image
-FROM python:3.10-slim
+# official base image of Python 
+FROM arm64v8/python:3.10-slim
+
 
 # Install python3.10-dev package
 
