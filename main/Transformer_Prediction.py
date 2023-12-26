@@ -7,7 +7,7 @@ from keras.models import load_model
 
 def make_predictions(input_data):
     # Load the saved model
-    model_folder='Transformer_Model'
+    model_folder='Transformer_Modell'
     loaded_model = tf.keras.models.load_model(model_folder)
 
     # Preprocess input_data as needed
