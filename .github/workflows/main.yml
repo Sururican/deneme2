@@ -89,7 +89,7 @@ jobs:
       
     - name: Run Docker Container für LSTM
       run: |
-        docker run -d --name LSTMcontainer -v lstm_volume:/app/data -p 9092:80 sururikus/deneme2:main > docker_logs_lstm.txt
+        docker run -p 9092:80 sururikus/deneme2:main > docker_logs_lstm.txt
       continue-on-error: true
     - name: Show working directory
       run: pwd
