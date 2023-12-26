@@ -175,47 +175,49 @@ def TII(High, Low, Open,Close,majorLength,minorLength,upperLevel,lowerLevel, **k
     'Close': Close  # Close cloumn
     }
     data = pd.DataFrame(df)
-    data["SMA"] = data['Close'].rolling(window=majorLength).mean()
-    data.fillna(data.SMA.iloc[majorLength - 1],inplace=True)
+    def nz(x, alternative=0):
+    if np.isnan(x):
+        return 0
+    else:
+        return x
+signals = []
+data.Close= data['Close'].iloc[::-1].values
+data.SMA=data.SMA.iloc[::-1].values
+for i in range(len(data)): 
+    tii=0
     
+    positiveSum = 0.0
+    negativeSum = 0.0
+    close=[]
+    Sma=[]
+    close=data['Close'].iloc[i:minorLength+i].values
+    Sma=data['SMA'].iloc[i:minorLength+i].values
+    for j in range(len(close)-1):
+        price = nz(close[j])
+        avg = nz(Sma[j])
+        positiveSum +=  (price - avg) if price >= avg else 0
+        negativeSum += 0 if price >= avg else (avg - price) 
+
+    if positiveSum + negativeSum != 0:
+        tii = (100 * positiveSum) / (positiveSum + negativeSum)    
+    else:
+        tii = 0   
     
-    signals = []
-
-    tii_values=[]
-    for i in range(len(data)): #np.arange(0,len(data),20):  drop(data.index)
-        #if i % minorLength == 1:
-        tii=0
-        positiveSum = 0.0
-        negativeSum = 0.0
-        close=[]
-        Sma=[]
-        close=data['Close'].iloc[i:20+i].values
-        Sma=data['SMA'].iloc[i:20+i].values
-        for j in range(len(close)):
-            price = close[j]
-            avg = Sma[j]
-            if price > avg:
-                positiveSum += price - avg
-            else:
-                negativeSum += avg - price
-
-        
-        tii =100 * positiveSum / (positiveSum + negativeSum)
-        tii_values.append(tii)
-            # "long" veya "short" sinyal üret
-        if tii > upperLevel and highlightBreakouts:
-            signal = 1
-        elif tii < lowerLevel and highlightBreakouts:
-            signal = 0
-        else:
-            signal = signals[i-1] if i > 0 else 0
-        signals.append(signal)        
-
-
-
-    data["Signals"]=signals
+    if tii > upperLevel and highlightBreakouts:
+        signal = 1
+    elif tii < lowerLevel and highlightBreakouts:
+        signal = -1
+    else:
+        signal=0
     
-    return data.Signals
+    signals.append(signal)        
+    
+data["Signal"]=signals
+data.Signal=data.Signal.iloc[::-1].values
+data.SMA=data.SMA.iloc[::-1].values
+data.Close=data.Close.iloc[::-1].values
+    
+return data.Signal
 
                           ##################BCL2ECTS INDICATOR##########   it's finished
 def BCL2ECTS(High, Low, Open,Close, fast_length,slow_length,buy_threshold,sell_threshold,**kwargs):
