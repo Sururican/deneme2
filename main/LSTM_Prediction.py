@@ -35,7 +35,7 @@ last_30_rows_array = X[-30:,:]
 input=last_30_rows_array.reshape((1, 30, 11))
 
 predictions=make_predictions(input)
-print(predictions)
+print(f"Heutige Vorhersage : {predictions} Heute: {end_date}")
 
 
 # %%
