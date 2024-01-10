@@ -40,6 +40,7 @@ jobs:
         file: main/Dockerfile_LSTM.dockerfile
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:main
+        platforms: linux/amd64,linux/arm64,linux/arm/v7
   
 
         
@@ -76,6 +77,7 @@ jobs:
         file: main/Transformer_Dockerfile.dockerfile
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
+        platforms: linux/amd64,linux/arm64,linux/arm/v7
        
 
       
