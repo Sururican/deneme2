@@ -16,7 +16,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: 3.10
 
     - name: Install dependencies
       run: |
@@ -53,7 +53,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: 3.10
 
     - name: Install dependencies
       run: |
@@ -107,7 +107,7 @@ jobs:
     steps:
     - name: Run Docker Container für TRANSFORMER
       run: |
-        docker run -p 9091:80 sururikus/deneme2:latest > docker_logs_transformer.txt
+        docker run -p 9091:8089 sururikus/deneme2:latest > docker_logs_transformer.txt
       # Add docker_logs.txt to artifacts
       continue-on-error: true
     - name: Upload Docker Logs to Artifact
