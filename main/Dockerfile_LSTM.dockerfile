@@ -1,5 +1,5 @@
 # official base image of Python 
-FROM python:stable-slim
+FROM python:3.12-slim
 
 
 # Install python3.10-dev package
