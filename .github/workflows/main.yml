@@ -1,0 +1,127 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_Deploy_LSTM_Modell:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r main/requirements
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+      with:
+        images: sururikus/hub
+      
+    - name: Build Docker image
+      id: Docker_Build_LSTM
+      uses: docker/build-push-action@v5
+      with:
+        context: main
+        file: main/Dockerfile_LSTM.dockerfile
+        push: true
+        #tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:main
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        
+  
+
+        
+  build_Deploy_Transformer_Modell:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r main/requirements
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+        
+    - name: Build Docker image for Transformer_Modell
+      id: Docker_Build_Transformer
+      uses: docker/build-push-action@v5
+      with:
+        context: main
+        file: main/Transformer_Dockerfile.dockerfile
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
+        
+       
+
+      
+  RUN_LSTM_Container_SAVE_Log_inVolume:
+    runs-on: ubuntu-latest
+    needs: build_Deploy_LSTM_Modell
+
+    steps:
+    - name: Create Docker Volume
+      run: docker volume create lstm_volume
+      
+    - name: Run Docker Container für LSTM
+      run: |
+        docker run -p 9092:80 sururikus/deneme2:main > docker_logs_lstm.txt
+      continue-on-error: true
+    - name: Show working directory
+      run: pwd
+    - name: Upload Docker Logs to Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Pipeline
+        path: docker_logs_lstm.txt
+      
+      
+  RUN_Transformer_Modell_to_Docker:
+    runs-on: ubuntu-latest
+    needs: build_Deploy_Transformer_Modell
+
+    steps:
+    - name: Run Docker Container für TRANSFORMER
+      run: |
+        docker run -p 9091:8089 sururikus/hub:main > docker_logs_transformer.txt
+      # Add docker_logs.txt to artifacts
+      continue-on-error: true
+    - name: Upload Docker Logs to Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Pipeline
+        path: docker_logs_transformer.txt
+        
+        
+        
